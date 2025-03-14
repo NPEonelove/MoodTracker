@@ -10,6 +10,8 @@ import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
 import ru.meowlove.MoodTracker.services.MoodService;
 
+import java.util.List;
+
 
 @CrossOrigin(value = "*")
 @RestController
@@ -44,5 +46,10 @@ public class MoodController {
     public ResponseEntity<String> deleteMood(@PathVariable("id") int id, HttpSession session) {
         moodService.deleteMood(id, session);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<GetMoodDTO>> getMoodHistory(HttpSession session) {
+        return ResponseEntity.ok(moodService.getAllMoods(session));
     }
 }
