@@ -9,6 +9,7 @@ import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
 import ru.meowlove.MoodTracker.exceptions.mood.MoodNotAddedException;
+import ru.meowlove.MoodTracker.exceptions.mood.MoodNotDeletedException;
 import ru.meowlove.MoodTracker.exceptions.mood.MoodNotHavePermissionsForEditException;
 import ru.meowlove.MoodTracker.exceptions.mood.MoodNotHavePermissionsForGiveException;
 import ru.meowlove.MoodTracker.models.Account;
@@ -67,6 +68,15 @@ public class MoodService {
             return modelMapper.map(mood, GetMoodDTO.class);
         }
         throw new MoodNotHavePermissionsForGiveException("You do not have permissions to view mood");
+    }
+
+    public void deleteMood(int id, HttpSession session) {
+        Mood mood = moodRepository.findById(id).orElseThrow(() -> new RuntimeException("Mood not found"));
+        if (mood.getAccount() == accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null)) {
+            moodRepository.deleteMoodById(id);
+            return;
+        }
+        throw new MoodNotDeletedException("You do not have permissions to delete mood");
     }
 
 }

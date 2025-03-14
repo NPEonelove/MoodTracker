@@ -10,5 +10,6 @@ import java.util.Date;
 public interface MoodRepository extends JpaRepository<Mood, Integer> {
 
     boolean existsByAccountUsernameAndDate(String accountUsername, Date date);
+    void deleteMoodById(int id);
 
 }

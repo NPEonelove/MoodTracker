@@ -23,7 +23,7 @@ public class MoodController {
         this.moodService = moodService;
     }
 
-    @PostMapping("/add-mood")
+    @PostMapping
     public ResponseEntity<AddMoodDTO> addMood(@RequestBody AddMoodDTO addMoodDTO, HttpSession session) {
         moodService.addMood(addMoodDTO, session);
         return new ResponseEntity<>(addMoodDTO, HttpStatus.OK);
@@ -34,9 +34,15 @@ public class MoodController {
         return new ResponseEntity<>(moodService.getMood(id, session), HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}/edit-mood")
+    @PatchMapping("/{id}")
     public ResponseEntity<EditMoodDTO> editMood(@PathVariable("id") int id, @RequestBody EditMoodDTO editMoodDTO, HttpSession session) {
         moodService.editMood(id, editMoodDTO, session);
         return new ResponseEntity<>(editMoodDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMood(@PathVariable("id") int id, HttpSession session) {
+        moodService.deleteMood(id, session);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

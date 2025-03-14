@@ -20,7 +20,7 @@ public class EditMoodDTO {
     public void setValue(Integer value) {
         this.value = value;
     }
-    
+
     public String getComment() {
         return comment;
     }
