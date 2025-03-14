@@ -10,8 +10,8 @@ import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
 import ru.meowlove.MoodTracker.services.MoodService;
 
-import java.nio.file.Path;
 
+@CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/mood")
 public class MoodController {
