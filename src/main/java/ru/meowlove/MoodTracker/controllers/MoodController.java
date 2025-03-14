@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
+import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
 import ru.meowlove.MoodTracker.services.MoodService;
+
+import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/mood")
@@ -26,13 +29,14 @@ public class MoodController {
         return new ResponseEntity<>(addMoodDTO, HttpStatus.OK);
     }
 
-//    @PatchMapping("/edit-mood")
-//    public ResponseEntity<HttpStatus> editMood(@RequestBody EditMoodDTO editMoodDTO, HttpSession session) {
-//
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<GetMoodDTO> getMood(@PathVariable("id") int id, HttpSession session) {
+        return new ResponseEntity<>(moodService.getMood(id, session), HttpStatus.OK);
+    }
 
-//    @GetMapping("/check-today-exists")
-//    public ResponseEntity<Boolean> checkTodayMoodExists(HttpSession session) {
-//        return new ResponseEntity<>(moodService.checkTodayMoodExists(session), HttpStatus.OK);
-//    }
+    @PatchMapping("/{id}/edit-mood")
+    public ResponseEntity<EditMoodDTO> editMood(@PathVariable("id") int id, @RequestBody EditMoodDTO editMoodDTO, HttpSession session) {
+        moodService.editMood(id, editMoodDTO, session);
+        return new ResponseEntity<>(editMoodDTO, HttpStatus.OK);
+    }
 }

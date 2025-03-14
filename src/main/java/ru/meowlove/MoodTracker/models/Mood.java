@@ -74,4 +74,15 @@ public class Mood {
     }
 
     public Mood() {}
+
+    @Override
+    public String toString() {
+        return "Mood{" +
+                "id=" + id +
+                ", value=" + value +
+                ", comment='" + comment + '\'' +
+                ", date=" + date +
+                ", account=" + account +
+                '}';
+    }
 }

@@ -35,10 +35,8 @@ public class AccountService {
     }
 
     public Account loginAccount(LoginDTO loginDTO) {
-        Account account = accountRepository.findByUsername(loginDTO.getUsername()).orElse(null);
-        if (account == null) {
-            throw new AccountNotFoundException("Account not found");
-        }
+        Account account = accountRepository.findByUsername(loginDTO.getUsername()).orElseThrow(()
+                -> new AccountNotFoundException("Account not found"));
         if (!account.getPassword().equals(loginDTO.getPassword())) {
             throw new AccountIncorrectPasswordException("Incorrect password");
         } else {

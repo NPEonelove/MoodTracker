@@ -6,6 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
+import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
+import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
+import ru.meowlove.MoodTracker.exceptions.mood.MoodNotAddedException;
+import ru.meowlove.MoodTracker.exceptions.mood.MoodNotHavePermissionsForEditException;
+import ru.meowlove.MoodTracker.exceptions.mood.MoodNotHavePermissionsForGiveException;
+import ru.meowlove.MoodTracker.models.Account;
 import ru.meowlove.MoodTracker.models.Mood;
 import ru.meowlove.MoodTracker.repositories.AccountRepository;
 import ru.meowlove.MoodTracker.repositories.MoodRepository;
@@ -31,19 +37,36 @@ public class MoodService {
 
     public void addMood(AddMoodDTO addMoodDTO, HttpSession session) {
         Mood mood = modelMapper.map(addMoodDTO, Mood.class);
-        mood.setDate(new Date());
         mood.setAccount(accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null));
+        mood.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        if (mood.getAccount() != null) {
+            if (moodRepository.existsByAccountUsernameAndDate(mood.getAccount().getUsername(), mood.getDate())) {
+                throw new MoodNotAddedException("Mood already exists");
+            }
+        }
         moodRepository.save(mood);
     }
 
-//    public boolean checkTodayMoodExists(HttpSession session) {
-//        Date date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
-////        Mood mood = moodRepository.findByDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())).orElse(null);
-//
-//        if (mood == null) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
+    public void editMood(int id, EditMoodDTO editMoodDTO, HttpSession session) {
+        Mood mood = moodRepository.findById(id).orElseThrow(() -> new RuntimeException("Mood not found"));
+        Account account = accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null);
+        if (mood.getAccount() == account) {
+            mood = modelMapper.map(editMoodDTO, Mood.class);
+            mood.setAccount(account);
+            mood.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            mood.setId(id);
+            moodRepository.save(mood);
+            return;
+        }
+        throw new MoodNotHavePermissionsForEditException("You do not have permissions to edit mood");
+    }
+
+    public GetMoodDTO getMood(int id, HttpSession session) {
+        Mood mood = moodRepository.findById(id).orElseThrow(() -> new RuntimeException("Mood not found"));
+        if (mood.getAccount() == accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null)) {
+            return modelMapper.map(mood, GetMoodDTO.class);
+        }
+        throw new MoodNotHavePermissionsForGiveException("You do not have permissions to view mood");
+    }
+
 }
