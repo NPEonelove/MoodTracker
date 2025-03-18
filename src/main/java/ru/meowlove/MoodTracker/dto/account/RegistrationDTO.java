@@ -2,11 +2,13 @@ package ru.meowlove.MoodTracker.dto.account;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Data
 public class RegistrationDTO {
 
     @NotBlank(message = "Логин не должен быть пустым")

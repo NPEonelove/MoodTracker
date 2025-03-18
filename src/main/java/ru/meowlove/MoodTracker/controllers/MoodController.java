@@ -1,6 +1,7 @@
 package ru.meowlove.MoodTracker.controllers;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
 import ru.meowlove.MoodTracker.repositories.MoodRepository;
+import ru.meowlove.MoodTracker.services.AccountService;
 import ru.meowlove.MoodTracker.services.MoodService;
 
 import java.util.List;
@@ -20,50 +22,44 @@ import java.util.List;
 @CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/mood")
+@RequiredArgsConstructor
 public class MoodController {
 
     private final MoodService moodService;
     private final MoodRepository moodRepository;
+    private final AccountService accountService;
     private final ModelMapper modelMapper;
 
-    @Autowired
-    public MoodController(MoodService moodService, MoodRepository moodRepository, ModelMapper modelMapper) {
-        this.moodService = moodService;
-        this.moodRepository = moodRepository;
-        this.modelMapper = modelMapper;
-    }
-
     @PostMapping
-    public ResponseEntity<AddMoodDTO> addMood(@RequestBody AddMoodDTO addMoodDTO, HttpSession session) {
-        moodService.addMood(addMoodDTO, session);
+    public ResponseEntity<AddMoodDTO> addMood(@RequestBody AddMoodDTO addMoodDTO) {
+        moodService.addMood(addMoodDTO);
         return new ResponseEntity<>(addMoodDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetMoodDTO> getMood(@PathVariable("id") int id, HttpSession session) {
-        return new ResponseEntity<>(moodService.getMood(id, session), HttpStatus.OK);
+    public ResponseEntity<GetMoodDTO> getMood(@PathVariable("id") int id) {
+        return new ResponseEntity<>(moodService.getMood(id), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<EditMoodDTO> editMood(@PathVariable("id") int id, @RequestBody EditMoodDTO editMoodDTO, HttpSession session) {
-        moodService.editMood(id, editMoodDTO, session);
+    public ResponseEntity<EditMoodDTO> editMood(@PathVariable("id") int id, @RequestBody EditMoodDTO editMoodDTO) {
+        moodService.editMood(id, editMoodDTO);
         return new ResponseEntity<>(editMoodDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMood(@PathVariable("id") int id, HttpSession session) {
-        moodService.deleteMood(id, session);
+    public ResponseEntity<String> deleteMood(@PathVariable("id") int id) {
+        moodService.deleteMood(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/history")
     public ResponseEntity<List<GetMoodDTO>> getMoodHistory(@RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "5") int size,
-                                                     HttpSession session) {
+                                                     @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(moodRepository
                 .findByAccountUsername(
-                        String.valueOf(session.getAttribute("accountUsername")), pageable)
+                        accountService.getCurrentUser().getUsername(), pageable)
                 .stream().map(mood -> modelMapper.map(mood, GetMoodDTO.class)).toList());
     }
 }

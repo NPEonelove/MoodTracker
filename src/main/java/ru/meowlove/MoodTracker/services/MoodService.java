@@ -1,6 +1,7 @@
 package ru.meowlove.MoodTracker.services;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,22 +26,20 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MoodService {
 
     private final MoodRepository moodRepository;
     private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final ModelMapper modelMapper;
 
-    @Autowired
-    public MoodService(MoodRepository moodRepository, AccountRepository accountRepository, ModelMapper modelMapper) {
-        this.moodRepository = moodRepository;
-        this.accountRepository = accountRepository;
-        this.modelMapper = modelMapper;
-    }
 
-    public void addMood(AddMoodDTO addMoodDTO, HttpSession session) {
+    public void addMood(AddMoodDTO addMoodDTO) {
         Mood mood = modelMapper.map(addMoodDTO, Mood.class);
-        mood.setAccount(accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null));
+        mood.setAccount(accountRepository.findByUsername(accountService.getCurrentUser().getUsername()).orElse(null));
+
+//        mood.setAccount(accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null));
         mood.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         if (mood.getAccount() != null) {
             if (moodRepository.existsByAccountUsernameAndDate(mood.getAccount().getUsername(), mood.getDate())) {
@@ -50,9 +49,11 @@ public class MoodService {
         moodRepository.save(mood);
     }
 
-    public void editMood(int id, EditMoodDTO editMoodDTO, HttpSession session) {
+    public void editMood(int id, EditMoodDTO editMoodDTO) {
         Mood mood = moodRepository.findById(id).orElseThrow(() -> new RuntimeException("Mood not found"));
-        Account account = accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null);
+        Account account = accountRepository.findByUsername(accountService.getCurrentUser().getUsername()).orElse(null);
+
+//        Account account = accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null);
         if (mood.getAccount() == account) {
             mood = modelMapper.map(editMoodDTO, Mood.class);
             mood.setAccount(account);
@@ -64,17 +65,19 @@ public class MoodService {
         throw new MoodNotHavePermissionsForEditException("You do not have permissions to edit mood");
     }
 
-    public GetMoodDTO getMood(int id, HttpSession session) {
+    public GetMoodDTO getMood(int id) {
         Mood mood = moodRepository.findById(id).orElseThrow(() -> new RuntimeException("Mood not found"));
-        if (mood.getAccount() == accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null)) {
+//        if (mood.getAccount() == accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null)) {
+        if (mood.getAccount() == accountRepository.findByUsername(accountService.getCurrentUser().getUsername()).orElse(null)) {
             return modelMapper.map(mood, GetMoodDTO.class);
         }
+
         throw new MoodNotHavePermissionsForGiveException("You do not have permissions to view mood");
     }
 
-    public void deleteMood(int id, HttpSession session) {
+    public void deleteMood(int id) {
         Mood mood = moodRepository.findById(id).orElseThrow(() -> new RuntimeException("Mood not found"));
-        if (mood.getAccount() == accountRepository.findByUsername(String.valueOf(session.getAttribute("accountUsername"))).orElse(null)) {
+        if (mood.getAccount() == accountRepository.findByUsername(accountService.getCurrentUser().getUsername()).orElse(null)) {
             moodRepository.deleteMoodById(id);
             return;
         }
