@@ -3,9 +3,10 @@ package ru.meowlove.MoodTracker.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.meowlove.MoodTracker.exceptions.account.AccountAlreadyExistsException;
+import ru.meowlove.MoodTracker.exceptions.account.AccountNotFoundException;
 import ru.meowlove.MoodTracker.models.Account;
 import ru.meowlove.MoodTracker.repositories.AccountRepository;
 //import ru.meowlove.MoodTracker.utils.AccountConverter;
@@ -35,7 +36,7 @@ public class AccountService {
     public Account create(Account user) {
         if (repository.existsByUsername(user.getUsername())) {
             // Заменить на свои исключения
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new AccountAlreadyExistsException("Пользователь с таким именем уже существует");
         }
 
         return save(user);
@@ -48,7 +49,7 @@ public class AccountService {
      */
     public Account getByUsername(String username) {
         return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new AccountNotFoundException("Пользователь не найден"));
 
     }
 

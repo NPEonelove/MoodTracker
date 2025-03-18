@@ -28,12 +28,12 @@ public class GlobalExceptionsController {
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<AccountErrorResponse> handleAccountNotCreatedException(AccountNotFoundException ex) {
-        return new ResponseEntity<>(new AccountErrorResponse(ex.getMessage(), new Date()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new AccountErrorResponse(ex.getMessage(), new Date()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AccountIncorrectPasswordException.class)
     public ResponseEntity<AccountErrorResponse> handleAccountIncorrectPasswordException(AccountIncorrectPasswordException ex) {
-        return new ResponseEntity<>(new AccountErrorResponse(ex.getMessage(), new Date()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new AccountErrorResponse(ex.getMessage(), new Date()), HttpStatus.UNAUTHORIZED);
     }
 
     // mood errors
@@ -44,11 +44,11 @@ public class GlobalExceptionsController {
 
     @ExceptionHandler(MoodNotHavePermissionsForEditException.class)
     public ResponseEntity<MoodErrorResponse> handleMoodNotHavePermissionsForEditException(MoodNotHavePermissionsForEditException ex) {
-        return new ResponseEntity<>(new MoodErrorResponse(ex.getMessage(), new Date()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new MoodErrorResponse(ex.getMessage(), new Date()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MoodNotHavePermissionsForGiveException.class)
     public ResponseEntity<MoodErrorResponse> handleMoodNotHavePermissionsForGiveException(MoodNotHavePermissionsForGiveException ex) {
-        return new ResponseEntity<>(new MoodErrorResponse(ex.getMessage(), new Date()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new MoodErrorResponse(ex.getMessage(), new Date()), HttpStatus.FORBIDDEN);
     }
 }
