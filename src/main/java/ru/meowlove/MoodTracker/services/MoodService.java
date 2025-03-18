@@ -81,13 +81,13 @@ public class MoodService {
         throw new MoodNotDeletedException("You do not have permissions to delete mood");
     }
 
-    public List<GetMoodDTO> getAllMoods(HttpSession session) {
-        List<Mood> moods = moodRepository.findByAccountUsername(String.valueOf(session.getAttribute("accountUsername")));
-        List<GetMoodDTO> dtos = new ArrayList<>();
-        for (Mood mood : moods) {
-            dtos.add(modelMapper.map(mood, GetMoodDTO.class));
-        }
-        return dtos;
-    }
+//    public List<GetMoodDTO> getAllMoods(HttpSession session) {
+//        List<Mood> moods = moodRepository.findByAccountUsername(String.valueOf(session.getAttribute("accountUsername")));
+//        List<GetMoodDTO> dtos = new ArrayList<>();
+//        for (Mood mood : moods) {
+//            dtos.add(modelMapper.map(mood, GetMoodDTO.class));
+//        }
+//        return dtos;
+//    }
 
 }
