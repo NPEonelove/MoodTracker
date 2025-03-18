@@ -1,10 +1,8 @@
 package ru.meowlove.MoodTracker.controllers;
 
 import jakarta.servlet.http.HttpSession;
-import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
-import ru.meowlove.MoodTracker.models.Mood;
 import ru.meowlove.MoodTracker.repositories.MoodRepository;
 import ru.meowlove.MoodTracker.services.MoodService;
 
@@ -59,10 +56,6 @@ public class MoodController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//        @GetMapping("/history")
-//    public ResponseEntity<List<GetMoodDTO>> getMoodHistory(HttpSession session) {
-//        return ResponseEntity.ok(moodService.getAllMoods(session));
-//    }
     @GetMapping("/history")
     public ResponseEntity<List<GetMoodDTO>> getMoodHistory(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "5") int size,
@@ -72,6 +65,5 @@ public class MoodController {
                 .findByAccountUsername(
                         String.valueOf(session.getAttribute("accountUsername")), pageable)
                 .stream().map(mood -> modelMapper.map(mood, GetMoodDTO.class)).toList());
-//        return ResponseEntity.ok(moodRepository.findByAccountUsername(session.getAttribute("accountUsername").toString()));
     }
 }

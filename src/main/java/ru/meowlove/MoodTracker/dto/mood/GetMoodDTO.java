@@ -1,7 +1,13 @@
 package ru.meowlove.MoodTracker.dto.mood;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+
+@Getter
+@Setter
 public class GetMoodDTO {
 
     private int id;
@@ -12,35 +18,4 @@ public class GetMoodDTO {
 
     private Date date;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 }

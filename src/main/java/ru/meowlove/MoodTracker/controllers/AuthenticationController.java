@@ -32,7 +32,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<HttpStatus> registration(@RequestBody @Valid RegistrationDTO registrationDTO, BindingResult bindingResult, HttpSession session) {
+    public ResponseEntity<HttpStatus> registration(@RequestBody @Valid RegistrationDTO registrationDTO, BindingResult bindingResult,
+                                                   HttpSession session) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();
             for (ObjectError error : bindingResult.getAllErrors()) {
