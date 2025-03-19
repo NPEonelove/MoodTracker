@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.meowlove.MoodTracker.exceptions.account.*;
-import ru.meowlove.MoodTracker.exceptions.mood.MoodErrorResponse;
-import ru.meowlove.MoodTracker.exceptions.mood.MoodNotAddedException;
-import ru.meowlove.MoodTracker.exceptions.mood.MoodNotHavePermissionsForEditException;
-import ru.meowlove.MoodTracker.exceptions.mood.MoodNotHavePermissionsForGiveException;
+import ru.meowlove.MoodTracker.exceptions.mood.*;
 
 import java.util.Date;
 
@@ -51,4 +48,10 @@ public class GlobalExceptionsController {
     public ResponseEntity<MoodErrorResponse> handleMoodNotHavePermissionsForGiveException(MoodNotHavePermissionsForGiveException ex) {
         return new ResponseEntity<>(new MoodErrorResponse(ex.getMessage(), new Date()), HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(MoodNotFoundException.class)
+    public ResponseEntity<MoodErrorResponse> handleMoodNotHavePermissionsForGiveException(MoodNotFoundException ex) {
+        return new ResponseEntity<>(new MoodErrorResponse(ex.getMessage(), new Date()), HttpStatus.FORBIDDEN);
+    }
+
 }
