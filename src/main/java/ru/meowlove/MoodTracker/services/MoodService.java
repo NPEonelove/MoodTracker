@@ -67,7 +67,6 @@ public class MoodService {
         if (mood.getAccount() == accountRepository.findByUsername(accountService.getCurrentUser().getUsername()).orElse(null)) {
             return modelMapper.map(mood, GetMoodDTO.class);
         }
-
         throw new MoodNotHavePermissionsForGiveException("You do not have permissions to view mood");
     }
 
