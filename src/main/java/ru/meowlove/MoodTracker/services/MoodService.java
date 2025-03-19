@@ -1,9 +1,7 @@
 package ru.meowlove.MoodTracker.services;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
@@ -20,9 +18,7 @@ import ru.meowlove.MoodTracker.repositories.MoodRepository;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Service
 @Transactional
@@ -83,14 +79,4 @@ public class MoodService {
         }
         throw new MoodNotDeletedException("You do not have permissions to delete mood");
     }
-
-//    public List<GetMoodDTO> getAllMoods(HttpSession session) {
-//        List<Mood> moods = moodRepository.findByAccountUsername(String.valueOf(session.getAttribute("accountUsername")));
-//        List<GetMoodDTO> dtos = new ArrayList<>();
-//        for (Mood mood : moods) {
-//            dtos.add(modelMapper.map(mood, GetMoodDTO.class));
-//        }
-//        return dtos;
-//    }
-
 }

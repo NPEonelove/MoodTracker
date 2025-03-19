@@ -46,34 +46,4 @@ public class AuthenticationController {
     public ResponseEntity<JwtAuthenticationResponseDTO> signIn(@RequestBody @Valid LoginDTO request) {
         return ResponseEntity.ok(authenticationService.signIn(request));
     }
-//    private final AccountService accountService;
-//    private final ModelMapper modelMapper;
-//
-//    @Autowired
-//    public AuthenticationController(AccountService accountService, ModelMapper modelMapper) {
-//        this.accountService = accountService;
-//        this.modelMapper = modelMapper;
-//    }
-//
-//    @PostMapping("/registration")
-//    public ResponseEntity<HttpStatus> registration(@RequestBody @Valid RegistrationDTO registrationDTO, BindingResult bindingResult,) {
-//        if (bindingResult.hasErrors()) {
-//            StringBuilder errorMsg = new StringBuilder();
-//            for (ObjectError error : bindingResult.getAllErrors()) {
-//                errorMsg.append(error.getDefaultMessage()).append(". ");
-//            }
-//            throw new AccountNotCreatedException(errorMsg.toString());
-//        }
-//        accountService.save(modelMapper.map(registrationDTO, Account.class));
-//        return ResponseEntity.ok(HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<HttpStatus> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
-//        Account account = accountService.loginAccount(loginDTO);
-//        session.setAttribute("accountUsername", account.getUsername());
-//        return ResponseEntity.ok(HttpStatus.OK);
-//    }
-
-
 }

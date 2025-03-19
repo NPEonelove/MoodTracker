@@ -76,51 +76,16 @@ public class AccountService {
     }
 
 
-    /**
-     * Выдача прав администратора текущему пользователю
-     * <p>
-     * Нужен для демонстрации
+    /*
+      Выдача прав администратора текущему пользователю
+      <p>
+      Нужен для демонстрации
+
+    @Deprecated
+    public void getAdmin() {
+        var user = getCurrentUser();
+        user.setRole(Role.ROLE_ADMIN);
+        save(user);
+    }
      */
-//    @Deprecated
-//    public void getAdmin() {
-//        var user = getCurrentUser();
-//        user.setRole(Role.ROLE_ADMIN);
-//        save(user);
-//    }
-
-
-
-
-
-
-
-
-
-
-//    private final AccountRepository accountRepository;
-////    private final AccountConverter accountConverter;
-//    private final ModelMapper modelMapper;
-//
-//    @Autowired
-//    public AccountService(AccountRepository accountRepository, ModelMapper modelMapper) {
-//        this.accountRepository = accountRepository;
-//        this.modelMapper = modelMapper;
-//    }
-//
-//    public void registerAccount(RegistrationDTO registrationDTO) {
-//        if (accountRepository.findByUsername(registrationDTO.getUsername()).isPresent()) {
-//            throw new AccountAlreadyExistsException("Account already exists");
-//        }
-//        accountRepository.save(modelMapper.map(registrationDTO, Account.class));
-//    }
-//
-//    public Account loginAccount(LoginDTO loginDTO) {
-//        Account account = accountRepository.findByUsername(loginDTO.getUsername()).orElseThrow(()
-//                -> new AccountNotFoundException("Account not found"));
-//        if (!account.getPassword().equals(loginDTO.getPassword())) {
-//            throw new AccountIncorrectPasswordException("Incorrect password");
-//        } else {
-//            return account;
-//        }
-//    }
 }
