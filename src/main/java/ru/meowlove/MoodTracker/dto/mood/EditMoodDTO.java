@@ -12,8 +12,8 @@ import lombok.Setter;
 public class EditMoodDTO {
 
     @Min(value = 1, message = "Значение настроения должно быть от 1 до 10")
-    @Max(value = 10, message = "Значение настроения должно быть от 1 до 10")
-    @Schema(example = "7")
+    @Max(value = 100, message = "Значение настроения должно быть от 1 до 10")
+    @Schema(example = "69")
     private Integer value;
 
     @Size(max = 65536, message = "Максимальный размер комментария - 65536 символов")

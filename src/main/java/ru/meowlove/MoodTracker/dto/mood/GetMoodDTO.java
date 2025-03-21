@@ -14,7 +14,7 @@ public class GetMoodDTO {
 
     private int id;
 
-    @Schema(example = "7")
+    @Schema(example = "69")
     private int value;
 
     @Schema(example = "So good <3")
