@@ -52,15 +52,6 @@ public class MoodController {
     }
 
     @Operation(
-            summary = "Изменение сегодняшнего настроения"
-    )
-    @PatchMapping("/{id}")
-    public ResponseEntity<EditMoodDTO> editMood(@PathVariable("id") int id, @RequestBody EditMoodDTO editMoodDTO) {
-        moodService.editMood(id, editMoodDTO);
-        return new ResponseEntity<>(editMoodDTO, HttpStatus.OK);
-    }
-
-    @Operation(
             summary = "Удаление настроения по id"
     )
     @DeleteMapping("/{id}")

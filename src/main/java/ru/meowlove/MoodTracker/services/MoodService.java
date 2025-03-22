@@ -34,25 +34,26 @@ public class MoodService {
         mood.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         if (mood.getAccount() != null) {
             if (moodRepository.existsByAccountUsernameAndDate(mood.getAccount().getUsername(), mood.getDate())) {
-                throw new MoodNotAddedException("Mood already exists");
+                mood.setId(moodRepository.findByAccountUsernameAndDate(mood.getAccount().getUsername(), mood.getDate()).getId());
+                moodRepository.save(mood);
             }
         }
         moodRepository.save(mood);
     }
 
-    public void editMood(int id, EditMoodDTO editMoodDTO) {
-        Mood mood = moodRepository.findById(id).orElseThrow(() -> new MoodNotFoundException("Mood not found"));
-        Account account = accountRepository.findByUsername(accountService.getCurrentUser().getUsername()).orElse(null);
-        if (mood.getAccount() == account) {
-            mood = modelMapper.map(editMoodDTO, Mood.class);
-            mood.setAccount(account);
-            mood.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            mood.setId(id);
-            moodRepository.save(mood);
-            return;
-        }
-        throw new MoodNotHavePermissionsForEditException("You do not have permissions to edit mood");
-    }
+//    public void editMood(int id, EditMoodDTO editMoodDTO) {
+//        Mood mood = moodRepository.findById(id).orElseThrow(() -> new MoodNotFoundException("Mood not found"));
+//        Account account = accountRepository.findByUsername(accountService.getCurrentUser().getUsername()).orElse(null);
+//        if (mood.getAccount() == account) {
+//            mood = modelMapper.map(editMoodDTO, Mood.class);
+//            mood.setAccount(account);
+//            mood.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+//            mood.setId(id);
+//            moodRepository.save(mood);
+//            return;
+//        }
+//        throw new MoodNotHavePermissionsForEditException("You do not have permissions to edit mood");
+//    }
 
     public GetMoodDTO getMood(int id) {
         Mood mood = moodRepository.findById(id).orElseThrow(() -> new MoodNotFoundException("Mood not found"));
