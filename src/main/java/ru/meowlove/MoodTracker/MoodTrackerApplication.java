@@ -17,6 +17,4 @@ public class MoodTrackerApplication {
 		return new ModelMapper();
 	}
 
-	// TODO - Сделать возврат ошибок (в нормальном виде) при валидации через json
-
 }

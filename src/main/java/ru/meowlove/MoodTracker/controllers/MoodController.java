@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
-import ru.meowlove.MoodTracker.dto.mood.EditMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
 import ru.meowlove.MoodTracker.repositories.MoodRepository;
 import ru.meowlove.MoodTracker.services.AccountService;
