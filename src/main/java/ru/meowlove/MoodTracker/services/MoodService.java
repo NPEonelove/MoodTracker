@@ -2,7 +2,8 @@ package ru.meowlove.MoodTracker.services;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
@@ -69,7 +70,7 @@ public class MoodService {
                 .stream().map(mood -> modelMapper.map(mood, GetMoodDTO.class)).toList());
         List<GetMoodDTO> current_moods = moodRepository
                 .findByAccountUsername(
-                        accountService.getCurrentUser().getUsername(), Pageable.ofSize(7))
+                        accountService.getCurrentUser().getUsername(), PageRequest.of(0, 7, Sort.by("date").descending()))
                 .stream().map(mood -> modelMapper.map(mood, GetMoodDTO.class)).toList();
         int sum = 0;
         for (GetMoodDTO getMoodDTO : current_moods) {
