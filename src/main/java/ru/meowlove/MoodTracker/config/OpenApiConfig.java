@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.info.Info;
         info = @Info(
                 title = "Mood Tracker",
                 description = "API for Mood Tracker (Seishu's individual project)",
-                version = "Alpha 0.3.21"
+                version = "Alpha 0.3.23"
         )
 )
 public class OpenApiConfig {

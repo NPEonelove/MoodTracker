@@ -15,6 +15,7 @@ public interface MoodRepository extends JpaRepository<Mood, Integer> {
 
     Mood findByAccountUsernameAndDate(String accountUsername, Date date);
     void deleteMoodById(int id);
+    List<Mood> findByAccountUsername(String accountUsername);
     List<Mood> findByAccountUsername(String accountUsername, Pageable pageable);
 
 }

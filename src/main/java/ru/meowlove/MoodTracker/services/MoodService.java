@@ -2,9 +2,11 @@ package ru.meowlove.MoodTracker.services;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.meowlove.MoodTracker.dto.mood.AddMoodDTO;
+import ru.meowlove.MoodTracker.dto.mood.GetHistoryMoodDTO;
 import ru.meowlove.MoodTracker.dto.mood.GetMoodDTO;
 import ru.meowlove.MoodTracker.exceptions.mood.MoodNotDeletedException;
 import ru.meowlove.MoodTracker.exceptions.mood.MoodNotFoundException;
@@ -16,6 +18,7 @@ import ru.meowlove.MoodTracker.repositories.MoodRepository;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -56,5 +59,40 @@ public class MoodService {
             return;
         }
         throw new MoodNotDeletedException("You do not have permissions to delete mood");
+    }
+
+    public GetHistoryMoodDTO getHistoryMood() {
+        GetHistoryMoodDTO getHistoryMoodDTO = new GetHistoryMoodDTO();
+        getHistoryMoodDTO.setHistory(moodRepository
+                .findByAccountUsername(
+                        accountService.getCurrentUser().getUsername())
+                .stream().map(mood -> modelMapper.map(mood, GetMoodDTO.class)).toList());
+        List<GetMoodDTO> current_moods = moodRepository
+                .findByAccountUsername(
+                        accountService.getCurrentUser().getUsername(), Pageable.ofSize(7))
+                .stream().map(mood -> modelMapper.map(mood, GetMoodDTO.class)).toList();
+        int sum = 0;
+        for (GetMoodDTO getMoodDTO : current_moods) {
+            sum += getMoodDTO.getValue();
+        }
+        if (sum > 0) {
+            getHistoryMoodDTO.setCurrent_average(String.format("%.2f", (double) sum / current_moods.stream().toList().size()));
+        } else {
+            getHistoryMoodDTO.setCurrent_average("0");
+        }
+        List<GetMoodDTO> moods = moodRepository
+                .findByAccountUsername(
+                        accountService.getCurrentUser().getUsername())
+                .stream().map(mood -> modelMapper.map(mood, GetMoodDTO.class)).toList();
+        sum = 0;
+        for (GetMoodDTO moodDTO : moods) {
+            sum += moodDTO.getValue();
+        }
+        if (sum > 0) {
+            getHistoryMoodDTO.setAverage(String.format("%.2f", (double) sum / moods.stream().toList().size()));
+        } else {
+            getHistoryMoodDTO.setAverage("0");
+        }
+        return getHistoryMoodDTO;
     }
 }
